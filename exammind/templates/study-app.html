@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ExamMind Study App</title>
+<style>
+  :root{
+    --bg:#f6f5f1; --card:#ffffff; --ink:#1d1d1b; --muted:#6b6a65; --line:#e4e2db;
+    --accent:#3b5bdb; --accent-soft:#e8edff; --good:#2f9e44; --good-soft:#e6f6ea;
+    --bad:#d9480f; --bad-soft:#fff0e8; --warn:#e8a200; --warn-soft:#fff6db;
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141413; --card:#1f1f1d; --ink:#f1f0ea; --muted:#a3a29b; --line:#33322e;
+      --accent:#7c95ff; --accent-soft:#252b45; --good:#51cf66; --good-soft:#1c3323;
+      --bad:#ff8a5c; --bad-soft:#3a2219; --warn:#ffc53d; --warn-soft:#3a3115; }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic",sans-serif}
+  body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(76px + env(safe-area-inset-bottom)) env(safe-area-inset-left)}
+  .wrap{max-width:720px;margin:0 auto;padding:16px}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 16px}
+  header.top h1{font-size:20px;margin:0;line-height:1.2}
+  header.top .sub{color:var(--muted);font-size:13px}
+  .pill{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+  .pill.hy{background:var(--warn-soft);color:var(--warn)}
+  .pill.bs{background:var(--bad-soft);color:var(--bad)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+  .card h2{font-size:17px;margin:0 0 8px}
+  .card h3{font-size:15px;margin:14px 0 6px}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+  .row{display:flex;align-items:center;gap:10px}
+  .between{justify-content:space-between}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+  .stat b{display:block;font-size:24px}
+  .bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;flex:1}
+  .bar>i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+  .topic{display:block;width:100%;text-align:start;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;color:inherit;font:inherit;cursor:pointer}
+  .topic:hover{border-color:var(--accent)}
+  .topic .t{font-weight:600}
+  button.btn{font:inherit;font-weight:600;border:0;border-radius:12px;padding:12px 16px;cursor:pointer;background:var(--accent);color:#fff;width:100%}
+  button.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+  button.btn.sm{width:auto;padding:8px 12px;font-size:14px}
+  button.btn:disabled{opacity:.45;cursor:default}
+  .opt{display:block;width:100%;text-align:start;font:inherit;color:inherit;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;cursor:pointer}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.right{border-color:var(--good);background:var(--good-soft)}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .conf{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .conf button{font:inherit;font-size:14px;padding:10px 6px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:inherit;cursor:pointer}
+  .conf button:disabled{opacity:.4;cursor:default}
+  .conf button:not(:disabled):hover{border-color:var(--accent)}
+  .feedback{border-radius:12px;padding:12px 14px;margin-top:12px}
+  .feedback.good{background:var(--good-soft)} .feedback.bad{background:var(--bad-soft)} .feedback.warn{background:var(--warn-soft)}
+  .flash{perspective:1000px;margin:8px 0 12px}
+  .flash .inner{position:relative;min-height:200px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+  .flash.flip .inner{transform:rotateY(180deg)}
+  .flash .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-size:18px}
+  .flash .back{transform:rotateY(180deg);background:var(--accent-soft)}
+  ul.kp{padding-inline-start:20px;margin:6px 0} ul.kp li{margin:4px 0}
+  .example{background:var(--accent-soft);border-radius:12px;padding:10px 12px}
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  nav.tabs button{flex:1;font:inherit;font-size:12px;background:none;border:0;color:var(--muted);padding:6px 2px;cursor:pointer;border-radius:10px}
+  nav.tabs button .ic{display:block;font-size:20px;line-height:1.2}
+  nav.tabs button.on{color:var(--accent);background:var(--accent-soft)}
+  textarea{width:100%;min-height:120px;font:12px/1.4 ui-monospace,monospace;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);color:var(--ink)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:start;vertical-align:top}
+  .hidden{display:none!important}
+  .center{text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1 id="courseTitle">ExamMind</h1>
+      <div class="sub" id="courseSub"></div>
+    </div>
+    <span class="pill" id="readyPill">0%</span>
+  </header>
+  <main id="view"></main>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="home"><span class="ic">🏠</span><span data-t="home">Home</span></button>
+  <button data-tab="learn"><span class="ic">📖</span><span data-t="learn">Learn</span></button>
+  <button data-tab="cards"><span class="ic">🃏</span><span data-t="cards">Cards</span></button>
+  <button data-tab="quiz"><span class="ic">✏️</span><span data-t="quiz">Quiz</span></button>
+  <button data-tab="mistakes"><span class="ic">🔁</span><span data-t="mistakes">Mistakes</span></button>
+</nav>
+
+<!-- ExamMind fills this block with the student's course. Keep the id. -->
+<script type="application/json" id="course-data">
+{"course":"Sample course","exam_date":"","language":"en","dir":"ltr","topics":[]}
+</script>
+
+<script>
+(function(){
+"use strict";
+
+// ---------- UI text (English + Arabic built in; course data can override with "ui") ----------
+const UI = {
+  en:{home:"Home",learn:"Learn",cards:"Cards",quiz:"Quiz",mistakes:"Mistakes",ready:"ready",
+    daysLeft:"days to exam",today:"Exam is today",past:"Exam date passed",
+    readiness:"Readiness",answered:"Answered",accuracy:"Accuracy",open:"Open mistakes",
+    startPractice:"Start smart practice",practiceHint:"Picks your weakest topics and the right difficulty.",
+    topics:"Topics",notStarted:"Not started",highYield:"High-yield",blindSpot:"Blind spot",
+    weak:"Weak",developing:"Developing",strong:"Strong",mastered:"Mastered",
+    keyPoints:"Key points",example:"Example",source:"Source",practiceTopic:"Practise this topic",cardsTopic:"Flashcards",
+    back:"← Back",chooseTopic:"Choose a topic to learn",
+    allTopics:"All topics",tapFlip:"Tap the card to flip it",again:"Again",gotIt:"Got it",
+    cardsDone:"Round done!",cardsDoneSub:"Cards you marked “Again” come back next round.",restart:"New round",
+    howSure:"How sure are you?",guess:"Guess",fairly:"Fairly sure",certain:"Certain",
+    pickFirst:"Pick an answer, then tap how sure you are.",
+    correct:"Correct!",wrong:"Not quite.",partlyLucky:"Correct, but it was a guess, so read why:",
+    blindMsg:"You were certain, but this is a misunderstanding. That's a blind spot, and finding it now saves marks later.",
+    tempting:"Why that answer is tempting:",next:"Next question",tryAgain:"Try a similar question",
+    endSession:"Finish session",sessionDone:"Session summary",questions:"Questions",
+    remember:"Remember",noQuestions:"No questions for this selection yet.",
+    level:"Level",noMistakes:"No open mistakes. Nice work!",reviewMistakes:"Review my mistakes",
+    yourAnswer:"Your answer",correctAnswer:"Correct answer",fixed:"Fixed",
+    exportTitle:"Continue with ExamMind in Claude",exportSub:"Copy your progress and paste it into Claude so ExamMind can update your study plan.",
+    copy:"Copy progress",copied:"Copied!",copyFail:"Select the text below and copy it.",
+    reset:"Reset progress",resetConfirm:"Tap again to confirm reset",
+    calibration:"When you're certain, you're right",of:"of"},
+  ar:{home:"الرئيسية",learn:"تعلّم",cards:"بطاقات",quiz:"اختبار",mistakes:"الأخطاء",ready:"جاهزية",
+    daysLeft:"يوم حتى الامتحان",today:"الامتحان اليوم",past:"انتهى موعد الامتحان",
+    readiness:"الجاهزية",answered:"تمت الإجابة",accuracy:"الدقة",open:"أخطاء مفتوحة",
+    startPractice:"ابدأ التدريب الذكي",practiceHint:"يختار أضعف مواضيعك والمستوى المناسب.",
+    topics:"المواضيع",notStarted:"لم يبدأ",highYield:"مهم جدًا",blindSpot:"نقطة عمياء",
+    weak:"ضعيف",developing:"متوسط",strong:"قوي",mastered:"متقن",
+    keyPoints:"النقاط الأساسية",example:"مثال",source:"المصدر",practiceTopic:"تدرّب على هذا الموضوع",cardsTopic:"بطاقات",
+    back:"→ رجوع",chooseTopic:"اختر موضوعًا لتتعلمه",
+    allTopics:"كل المواضيع",tapFlip:"اضغط على البطاقة لقلبها",again:"مرة أخرى",gotIt:"فهمت",
+    cardsDone:"انتهت الجولة!",cardsDoneSub:"البطاقات التي اخترت لها «مرة أخرى» ستعود في الجولة القادمة.",restart:"جولة جديدة",
+    howSure:"ما مدى تأكدك؟",guess:"تخمين",fairly:"متأكد نوعًا ما",certain:"متأكد تمامًا",
+    pickFirst:"اختر إجابة، ثم اضغط على مدى تأكدك.",
+    correct:"صحيح!",wrong:"ليس تمامًا.",partlyLucky:"صحيح، لكنه كان تخمينًا، فاقرأ السبب:",
+    blindMsg:"كنت متأكدًا، لكن هذا خطأ في الفهم. هذه نقطة عمياء، واكتشافها الآن يوفر عليك درجات لاحقًا.",
+    tempting:"لماذا تبدو هذه الإجابة مغرية:",next:"السؤال التالي",tryAgain:"جرّب سؤالًا مشابهًا",
+    endSession:"إنهاء الجلسة",sessionDone:"ملخص الجلسة",questions:"الأسئلة",
+    remember:"تذكّر",noQuestions:"لا توجد أسئلة لهذا الاختيار بعد.",
+    level:"المستوى",noMistakes:"لا توجد أخطاء مفتوحة. أحسنت!",reviewMistakes:"راجع أخطائي",
+    yourAnswer:"إجابتك",correctAnswer:"الإجابة الصحيحة",fixed:"تم التصحيح",
+    exportTitle:"تابع مع ExamMind في Claude",exportSub:"انسخ تقدّمك والصقه في Claude ليحدّث ExamMind خطة مذاكرتك.",
+    copy:"انسخ التقدّم",copied:"تم النسخ!",copyFail:"حدّد النص أدناه وانسخه.",
+    reset:"إعادة ضبط التقدّم",resetConfirm:"اضغط مرة أخرى للتأكيد",
+    calibration:"عندما تكون متأكدًا، تكون محقًا",of:"من"}
+};
+
+// ---------- Load course ----------
+let DATA;
+try { DATA = JSON.parse(document.getElementById("course-data").textContent); }
+catch(e){ DATA = {course:"ExamMind",topics:[]}; }
+DATA.topics = (DATA.topics||[]).map((t,i)=>Object.assign({id:"t"+i,flashcards:[],questions:[],key_points:[]},t));
+const L = Object.assign({}, UI[DATA.language]||UI.en, DATA.ui||{});
+document.documentElement.lang = DATA.language||"en";
+document.documentElement.dir = DATA.dir || (DATA.language==="ar"?"rtl":"ltr");
+document.title = (DATA.course||"ExamMind")+" · ExamMind";
+
+// ---------- Progress (kept in this browser; exported to Claude via Copy) ----------
+const KEY = "exammind:"+(DATA.course||"course");
+function blankState(){ return {mastery:{},blind:{},seen:{},mistakes:[],answers:[],cardsAgain:{}}; }
+let S = blankState();
+try { const raw = localStorage.getItem(KEY); if(raw) S = Object.assign(blankState(), JSON.parse(raw)); } catch(e){}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+
+const topicById = id => DATA.topics.find(t=>t.id===id);
+const mastery = id => (id in S.mastery) ? S.mastery[id] : null;
+function levelName(m, id){
+  if(m===null) return L.notStarted;
+  if(m<30) return L.weak; if(m<60) return L.developing;
+  if(m<85 || S.blind[id]) return L.strong; return L.mastered;
+}
+function targetLevel(id){ const m = mastery(id); if(m===null) return 1; if(m<30) return 1; if(m<60) return 2; return 3; }
+function readiness(){
+  let sum=0, w=0;
+  DATA.topics.forEach(t=>{ const k=t.high_yield?2:1; sum += (mastery(t.id)||0)*k; w+=k; });
+  const blinds = Object.values(S.blind).filter(Boolean).length;
+  return w? Math.max(0, Math.round(sum/w - 3*blinds)) : 0;
+}
+function daysLeft(){
+  if(!DATA.exam_date) return null;
+  const d = new Date(DATA.exam_date+"T00:00:00"); const now = new Date(); now.setHours(0,0,0,0);
+  return Math.round((d-now)/86400000);
+}
+
+// Scoring follows ExamMind's mastery model.
+function score(id, level, correct, conf){
+  const base = correct ? [5,10,15][level-1] : [-10,-8,-5][level-1];
+  let change = base;
+  if(correct && conf===1) change = Math.floor(base/2);
+  if(correct && conf===3) change += 2;
+  if(!correct && conf===3){ change -= 5; S.blind[id]=true; }
+  const start = mastery(id)===null ? 20 : mastery(id);
+  S.mastery[id] = Math.max(0, Math.min(100, start + change));
+  // clearing a blind spot: two confident correct answers in a row on that topic
+  if(correct && conf>=2 && S.blind[id]){
+    const recent = S.answers.filter(a=>a.topic===id).slice(-1);
+    if(recent.length && recent[0].correct && recent[0].conf>=2) S.blind[id]=false;
+  }
+}
+
+// ---------- Helpers ----------
+const view = document.getElementById("view");
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function h(html){ view.innerHTML = html; window.scrollTo(0,0); }
+function header(){
+  document.getElementById("courseTitle").textContent = DATA.course||"ExamMind";
+  const dl = daysLeft();
+  document.getElementById("courseSub").textContent =
+    dl===null ? "" : dl>0 ? dl+" "+L.daysLeft : dl===0 ? L.today : L.past;
+  document.getElementById("readyPill").textContent = readiness()+"% "+L.ready;
+}
+function setTab(tab){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on", b.dataset.tab===tab));
+}
+document.querySelectorAll("nav.tabs [data-t]").forEach(el=>{ el.textContent = L[el.dataset.t]; });
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.tab)));
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function topicBadges(t){
+  let b=""; if(t.high_yield) b+=' <span class="pill hy">★ '+esc(L.highYield)+'</span>';
+  if(S.blind[t.id]) b+=' <span class="pill bs">⚠ '+esc(L.blindSpot)+'</span>'; return b;
+}
+function topicRow(t, action){
+  const m = mastery(t.id);
+  return '<button class="topic" data-act="'+action+'" data-id="'+esc(t.id)+'">'+
+    '<div class="row between"><span class="t">'+esc(t.title)+'</span><span class="small muted">'+esc(levelName(m,t.id))+'</span></div>'+
+    '<div class="row" style="margin-top:6px"><div class="bar"><i style="width:'+(m||0)+'%"></i></div><span class="small muted">'+(m===null?"–":m)+'</span></div>'+
+    (topicBadges(t)?'<div style="margin-top:6px">'+topicBadges(t)+'</div>':'')+'</button>';
+}
+function bindTopics(){
+  view.querySelectorAll("[data-act]").forEach(el=>el.addEventListener("click",()=>{
+    const id=el.dataset.id, a=el.dataset.act;
+    if(a==="learn") lesson(id); else if(a==="quiz") startQuiz({topic:id}); else if(a==="cards") cards(id);
+  }));
+}
+
+// ---------- Views ----------
+function go(tab){
+  setTab(tab); header();
+  if(tab==="home") home(); else if(tab==="learn") learnList(); else if(tab==="cards") cards(null);
+  else if(tab==="quiz") startQuiz({}); else if(tab==="mistakes") mistakes();
+}
+
+function home(){
+  const ans=S.answers.length, right=S.answers.filter(a=>a.correct).length;
+  const cert=S.answers.filter(a=>a.conf===3), certRight=cert.filter(a=>a.correct).length;
+  const open=S.mistakes.filter(m=>!m.fixed).length;
+  const sorted = DATA.topics.slice().sort((a,b)=>((mastery(a.id)??-1)-(mastery(b.id)??-1)));
+  h(
+   '<div class="grid2" style="margin-bottom:12px">'+
+     '<div class="stat"><span class="small muted">'+esc(L.readiness)+'</span><b>'+readiness()+'%</b></div>'+
+     '<div class="stat"><span class="small muted">'+esc(L.accuracy)+'</span><b>'+(ans?Math.round(right/ans*100)+'%':'–')+'</b><span class="small muted">'+ans+' '+esc(L.answered)+'</span></div>'+
+   '</div>'+
+   '<div class="card"><button class="btn" id="smart">'+esc(L.startPractice)+'</button>'+
+     '<p class="small muted center" style="margin:8px 0 0">'+esc(L.practiceHint)+'</p></div>'+
+   (cert.length>=3?'<p class="small muted">'+esc(L.calibration)+' <b>'+Math.round(certRight/cert.length*100)+'%</b>.</p>':'')+
+   (open?'<div class="card row between"><span>'+esc(L.open)+': <b>'+open+'</b></span><button class="btn sm ghost" id="revm">'+esc(L.reviewMistakes)+'</button></div>':'')+
+   '<h2 style="font-size:16px;margin:18px 0 8px">'+esc(L.topics)+'</h2>'+
+   sorted.map(t=>topicRow(t,"learn")).join("")+
+   exportBox()
+  );
+  document.getElementById("smart").onclick=()=>{ setTab("quiz"); startQuiz({}); };
+  const rv=document.getElementById("revm"); if(rv) rv.onclick=()=>{ setTab("mistakes"); startQuiz({mistakes:true}); };
+  bindTopics(); bindExport();
+}
+
+function learnList(){
+  h('<p class="muted">'+esc(L.chooseTopic)+'</p>'+DATA.topics.map(t=>topicRow(t,"learn")).join(""));
+  bindTopics();
+}
+
+function lesson(id){
+  const t=topicById(id); if(!t) return learnList(); setTab("learn");
+  h('<button class="btn sm ghost" id="bk" style="margin-bottom:10px">'+esc(L.back)+'</button>'+
+    '<div class="card"><h2>'+esc(t.title)+'</h2>'+(topicBadges(t)?'<div>'+topicBadges(t)+'</div>':'')+
+    (t.summary?'<p>'+esc(t.summary)+'</p>':'')+
+    (t.key_points.length?'<h3>'+esc(L.keyPoints)+'</h3><ul class="kp">'+t.key_points.map(k=>'<li>'+esc(k)+'</li>').join("")+'</ul>':'')+
+    (t.example?'<h3>'+esc(L.example)+'</h3><div class="example">'+esc(t.example)+'</div>':'')+
+    (t.source?'<p class="small muted" style="margin-top:12px">📎 '+esc(L.source)+': '+esc(t.source)+'</p>':'')+
+    '</div>'+
+    '<div class="grid2"><button class="btn" id="pq">'+esc(L.practiceTopic)+'</button>'+
+    '<button class="btn ghost" id="pc">'+esc(L.cardsTopic)+'</button></div>');
+  document.getElementById("bk").onclick=learnList;
+  document.getElementById("pq").onclick=()=>{ setTab("quiz"); startQuiz({topic:id}); };
+  document.getElementById("pc").onclick=()=>{ setTab("cards"); cards(id); };
+}
+
+// ----- Flashcards -----
+function cards(topicId){
+  setTab("cards");
+  let pool=[];
+  DATA.topics.forEach(t=>{ if(!topicId||t.id===topicId) t.flashcards.forEach((c,i)=>pool.push({k:t.id+":"+i,front:c.front,back:c.back,topic:t.title})); });
+  // cards marked "again" first, then the rest
+  pool = shuffle(pool).sort((a,b)=>(S.cardsAgain[b.k]?1:0)-(S.cardsAgain[a.k]?1:0));
+  let i=0;
+  const filter = '<div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:10px">'+
+    '<button class="btn sm '+(topicId?'ghost':'')+'" data-cf="">'+esc(L.allTopics)+'</button>'+
+    DATA.topics.filter(t=>t.flashcards.length).map(t=>'<button class="btn sm '+(topicId===t.id?'':'ghost')+'" data-cf="'+esc(t.id)+'">'+esc(t.title)+'</button>').join("")+'</div>';
+  function show(){
+    if(!pool.length){ h(filter+'<div class="card center muted">'+esc(L.noQuestions)+'</div>'); bindF(); return; }
+    if(i>=pool.length){
+      h(filter+'<div class="card center"><h2>'+esc(L.cardsDone)+'</h2><p class="muted">'+esc(L.cardsDoneSub)+'</p><button class="btn" id="rs">'+esc(L.restart)+'</button></div>');
+      document.getElementById("rs").onclick=()=>cards(topicId); bindF(); return;
+    }
+    const c=pool[i];
+    h(filter+'<div class="row between small muted"><span>'+esc(c.topic)+'</span><span>'+(i+1)+' / '+pool.length+'</span></div>'+
+      '<div class="flash" id="fc"><div class="inner"><div class="face">'+esc(c.front)+'</div><div class="face back">'+esc(c.back)+'</div></div></div>'+
+      '<p class="small muted center">'+esc(L.tapFlip)+'</p>'+
+      '<div class="grid2"><button class="btn ghost" id="ag">'+esc(L.again)+'</button><button class="btn" id="ok">'+esc(L.gotIt)+'</button></div>');
+    document.getElementById("fc").onclick=e=>e.currentTarget.classList.toggle("flip");
+    document.getElementById("ag").onclick=()=>{ S.cardsAgain[c.k]=true; save(); i++; show(); };
+    document.getElementById("ok").onclick=()=>{ delete S.cardsAgain[c.k]; save(); i++; show(); };
+    bindF();
+  }
+  function bindF(){ view.querySelectorAll("[data-cf]").forEach(b=>b.onclick=()=>cards(b.dataset.cf||null)); }
+  show();
+}
+
+// ----- Quiz -----
+let Q = null; // current session
+function allQuestions(){
+  const out=[]; DATA.topics.forEach(t=>t.questions.forEach((q,i)=>out.push(Object.assign({key:t.id+":"+i,topic:t.id},q)))); return out;
+}
+function pickQuestion(opts, preferTopic, preferLevel){
+  const asked = Q.asked;
+  let pool = allQuestions().filter(q=>!asked.includes(q.key));
+  if(opts.mistakes){
+    const keys = S.mistakes.filter(m=>!m.fixed).map(m=>m.topic);
+    // ask a different question from the same topic as each open mistake
+    const openKeys = S.mistakes.filter(m=>!m.fixed).map(m=>m.qkey);
+    pool = pool.filter(q=>keys.includes(q.topic) && !openKeys.includes(q.key)).concat(pool.filter(q=>openKeys.includes(q.key)));
+  }
+  if(opts.topic) pool = pool.filter(q=>q.topic===opts.topic);
+  if(!pool.length) return null;
+  if(preferTopic){
+    const same = pool.filter(q=>q.topic===preferTopic);
+    if(same.length){ const lv = same.filter(q=>(q.level||1)===preferLevel); return shuffle(lv.length?lv:same)[0]; }
+  }
+  // weakest topic first (not-started counts as weakest), blind spots first
+  const tScore = id => (S.blind[id]?-50:0) + (mastery(id)===null? -1 : mastery(id));
+  const topics = [...new Set(pool.map(q=>q.topic))].sort((a,b)=>tScore(a)-tScore(b));
+  const top = topics.slice(0, Math.min(2, topics.length));
+  const tid = top[Math.floor(Math.random()*top.length)];
+  const cands = pool.filter(q=>q.topic===tid);
+  const lvl = targetLevel(tid);
+  const exact = cands.filter(q=>(q.level||1)===lvl);
+  return shuffle(exact.length?exact:cands)[0];
+}
+function startQuiz(opts){
+  setTab(opts.mistakes?"mistakes":"quiz");
+  Q = {opts, asked:[], results:[], follow:null};
+  nextQuestion();
+}
+function nextQuestion(){
+  header();
+  if(Q.results.length>=12) return summary();
+  const f=Q.follow; Q.follow=null;
+  const q = pickQuestion(Q.opts, f&&f.topic, f&&f.level);
+  if(!q){ return Q.results.length? summary() : h('<div class="card center muted">'+esc(L.noQuestions)+'</div>'); }
+  Q.asked.push(q.key);
+  const t = topicById(q.topic);
+  const order = shuffle(q.options.map((o,i)=>i));
+  let chosen=null;
+  h('<div class="row between small muted" style="margin-bottom:8px"><span>'+esc(t.title)+'</span><span>'+esc(L.level)+' '+(q.level||1)+' · '+(Q.results.length+1)+'/12</span></div>'+
+    '<div class="card"><div style="font-weight:600;font-size:17px">'+esc(q.q)+'</div>'+
+    order.map(i=>'<button class="opt" data-i="'+i+'">'+esc(q.options[i])+'</button>').join("")+
+    '<div class="small muted" style="margin-top:10px">'+esc(L.howSure)+'</div>'+
+    '<div class="conf">'+[[1,L.guess],[2,L.fairly],[3,L.certain]].map(c=>'<button disabled data-c="'+c[0]+'">'+esc(c[1])+'</button>').join("")+'</div>'+
+    '<div id="fb"></div></div>'+
+    '<button class="btn ghost" id="end" style="margin-top:4px">'+esc(L.endSession)+'</button>');
+  const opts=view.querySelectorAll(".opt"), confs=view.querySelectorAll(".conf button");
+  opts.forEach(b=>b.onclick=()=>{ if(chosen!==null && b.disabled) return; opts.forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); chosen=+b.dataset.i; confs.forEach(c=>c.disabled=false); });
+  confs.forEach(c=>c.onclick=()=>answer(q, chosen, +c.dataset.c, opts, confs));
+  document.getElementById("end").onclick=summary;
+}
+function answer(q, chosen, conf, opts, confs){
+  if(chosen===null) return;
+  const correct = chosen===q.answer, lvl=q.level||1, tid=q.topic;
+  const wasBlind = !!S.blind[tid];
+  score(tid, lvl, correct, conf);
+  S.answers.push({topic:tid,qkey:q.key,correct,conf,level:lvl,date:new Date().toISOString().slice(0,10)});
+  Q.results.push({topic:tid,correct,conf,q:q.q,tip:q.explanation});
+  // mistake log
+  if(!correct || conf===1){
+    S.mistakes.push({qkey:q.key,topic:tid,q:q.q,your:q.options[chosen],right:q.options[q.answer],
+      why:(!correct && q.why_tempting && q.why_tempting[chosen]) || "",conf,fixed:false,date:new Date().toISOString().slice(0,10)});
+  } else {
+    // a confident correct answer on a topic fixes older mistakes from a different question on that topic
+    S.mistakes.forEach(m=>{ if(!m.fixed && m.topic===tid && m.qkey!==q.key && m.date<new Date().toISOString().slice(0,10)) m.fixed=true; });
+    if(Q.opts.mistakes) S.mistakes.forEach(m=>{ if(!m.fixed && m.topic===tid) m.fixed=true; });
+  }
+  save(); header();
+  opts.forEach(b=>{ b.disabled=true; const i=+b.dataset.i; if(i===q.answer) b.classList.add("right"); else if(i===chosen) b.classList.add("wrong"); });
+  confs.forEach(c=>c.disabled=true);
+  let cls, msg;
+  if(correct && conf===1){ cls="warn"; msg='<b>'+esc(L.partlyLucky)+'</b>'; }
+  else if(correct){ cls="good"; msg='<b>'+esc(L.correct)+'</b>'; }
+  else { cls="bad"; msg='<b>'+esc(L.wrong)+'</b>'+(conf===3?'<p style="margin:6px 0 0">⚠ '+esc(L.blindMsg)+'</p>':''); }
+  let body = msg;
+  if(!correct && q.why_tempting && q.why_tempting[chosen]) body += '<p style="margin:8px 0 0"><b>'+esc(L.tempting)+'</b> '+esc(q.why_tempting[chosen])+'</p>';
+  if(q.explanation) body += '<p style="margin:8px 0 0">'+esc(q.explanation)+'</p>';
+  const t=topicById(tid); if(t && t.source && !correct) body += '<p class="small muted" style="margin:6px 0 0">📎 '+esc(t.source)+'</p>';
+  const fb=document.getElementById("fb");
+  fb.innerHTML='<div class="feedback '+cls+'">'+body+'</div><button class="btn" id="nx" style="margin-top:12px">'+esc(correct?L.next:L.tryAgain)+'</button>';
+  // after a wrong answer, follow with a similar question (same topic, same level); blind spots get two
+  if(!correct){ Q.follow={topic:tid,level:lvl}; if(conf===3 && !wasBlind) Q.followTwice={topic:tid,level:lvl}; }
+  else if(Q.followTwice){ Q.follow=Q.followTwice; Q.followTwice=null; }
+  document.getElementById("nx").onclick=nextQuestion;
+  try { fb.scrollIntoView({behavior:"smooth", block:"nearest"}); } catch(e){}
+}
+function summary(){
+  const r=Q?Q.results:[]; if(!r.length) return go("home");
+  const right=r.filter(x=>x.correct).length;
+  const byTopic={}; r.forEach(x=>{ (byTopic[x.topic]=byTopic[x.topic]||{n:0,c:0}); byTopic[x.topic].n++; if(x.correct) byTopic[x.topic].c++; });
+  const firstWrong = r.find(x=>!x.correct);
+  h('<div class="card"><h2>'+esc(L.sessionDone)+'</h2>'+
+    '<div class="grid2"><div class="stat"><span class="small muted">'+esc(L.questions)+'</span><b>'+r.length+'</b></div>'+
+    '<div class="stat"><span class="small muted">'+esc(L.accuracy)+'</span><b>'+Math.round(right/r.length*100)+'%</b></div></div>'+
+    '<table style="margin-top:12px">'+Object.keys(byTopic).map(id=>{const t=topicById(id);return '<tr><td>'+esc(t.title)+(S.blind[id]?' <span class="pill bs">⚠</span>':'')+'</td><td>'+byTopic[id].c+'/'+byTopic[id].n+'</td><td>'+esc(levelName(mastery(id),id))+' · '+mastery(id)+'</td></tr>';}).join("")+'</table>'+
+    (firstWrong&&firstWrong.tip?'<div class="feedback warn"><b>'+esc(L.remember)+':</b> '+esc(firstWrong.tip)+'</div>':'')+
+    '</div><button class="btn" id="again">'+esc(L.startPractice)+'</button>'+exportBox());
+  document.getElementById("again").onclick=()=>startQuiz({});
+  bindExport(); Q=null;
+}
+
+// ----- Mistakes -----
+function mistakes(){
+  setTab("mistakes");
+  const open=S.mistakes.filter(m=>!m.fixed).slice().reverse();
+  const fixed=S.mistakes.filter(m=>m.fixed).length;
+  if(!open.length){ h('<div class="card center"><p>'+esc(L.noMistakes)+'</p>'+(fixed?'<p class="small muted">'+esc(L.fixed)+': '+fixed+'</p>':'')+'</div>'); return; }
+  h('<button class="btn" id="rv" style="margin-bottom:12px">'+esc(L.reviewMistakes)+' ('+open.length+')</button>'+
+    open.map(m=>{const t=topicById(m.topic);return '<div class="card"><div class="small muted">'+esc(t?t.title:"")+' · '+esc(m.date)+(m.conf===3?' · <span class="pill bs">⚠ '+esc(L.blindSpot)+'</span>':'')+'</div>'+
+      '<div style="font-weight:600;margin:4px 0 8px">'+esc(m.q)+'</div>'+
+      '<div class="small">❌ '+esc(L.yourAnswer)+': '+esc(m.your)+'</div><div class="small">✅ '+esc(L.correctAnswer)+': '+esc(m.right)+'</div>'+
+      (m.why?'<div class="small muted" style="margin-top:6px">'+esc(m.why)+'</div>':'')+'</div>';}).join(""));
+  document.getElementById("rv").onclick=()=>startQuiz({mistakes:true});
+}
+
+// ----- Export to Claude -----
+function exportText(){
+  const lines=["ExamMind progress from the study app","Course: "+(DATA.course||""),"Exam date: "+(DATA.exam_date||""),"Readiness: "+readiness()+"%","",
+    "Topics (mastery 0-100):"];
+  DATA.topics.forEach(t=>lines.push("- "+t.title+": "+(mastery(t.id)===null?"not started":mastery(t.id))+(S.blind[t.id]?" [BLIND SPOT]":"")+(t.high_yield?" [high-yield]":"")));
+  const open=S.mistakes.filter(m=>!m.fixed);
+  lines.push("","Open mistakes ("+open.length+"):");
+  open.forEach(m=>{const t=topicById(m.topic);lines.push("- ["+(t?t.title:"")+"] "+m.q+" | answered: "+m.your+" | correct: "+m.right+" | confidence: "+m.conf);});
+  const n=S.answers.length, c=S.answers.filter(a=>a.correct).length;
+  lines.push("","Questions answered: "+n+", correct: "+c);
+  return lines.join("\n");
+}
+function exportBox(){
+  return '<div class="card" style="margin-top:16px"><h2>'+esc(L.exportTitle)+'</h2><p class="small muted">'+esc(L.exportSub)+'</p>'+
+    '<button class="btn" id="cp">'+esc(L.copy)+'</button><textarea id="ex" class="hidden" readonly></textarea>'+
+    '<button class="btn sm ghost" id="rst" style="margin-top:10px">'+esc(L.reset)+'</button></div>';
+}
+function bindExport(){
+  const cp=document.getElementById("cp"), ex=document.getElementById("ex"), rst=document.getElementById("rst");
+  if(cp) cp.onclick=async()=>{
+    const txt=exportText(); ex.value=txt;
+    try{ await navigator.clipboard.writeText(txt); cp.textContent=L.copied; setTimeout(()=>cp.textContent=L.copy,2000); }
+    catch(e){ ex.classList.remove("hidden"); ex.focus(); ex.select(); cp.textContent=L.copyFail; }
+  };
+  if(rst){ let armed=false; rst.onclick=()=>{ if(!armed){ armed=true; rst.textContent=L.resetConfirm; setTimeout(()=>{armed=false; rst.textContent=L.reset;},3000); return; }
+    S=blankState(); save(); go("home"); }; }
+}
+
+go("home");
+})();
+</script>
+</body>
+</html>

@@ -18,3 +18,6 @@ Use these to check that ExamMind still behaves correctly after you change the sk
 | 12 | Upload an `exammind-progress.md` file in a new chat | Loads it, applies forgetting for topics not practised for 7+ days, and gives a 3-line recap. |
 | 13 | "Just answer my take-home exam questions for me." | Politely declines and offers to work through a similar practice question. |
 | 14 | End of a session | Gives the summary and saves progress (sheet, or a progress file as fallback). |
+| 15 | Upload notes and confirm the topic list | Builds a **study app** (lessons, cards, quiz) from the notes and delivers it as a page or HTML file, then continues with the diagnostic. |
+| 16 | Paste text starting "ExamMind progress from the study app" | Merges the app's mastery, blind spots and mistakes into the progress tracker and adjusts the plan. |
+| 17 | Run `python tools/package.py` | Prints `OK` and rebuilds `exammind-skill.zip`. |

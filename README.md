@@ -1,80 +1,64 @@
 # ExamMind — Adaptive Study Coach
 
-[العربية](README.ar.md) · **Version 1.1** · [Changelog](CHANGELOG.md)
+[العربية](README.ar.md) · **v1.2** · [Changelog](CHANGELOG.md)
 
-ExamMind is a Claude skill that turns Claude into a study coach for university exams. It learns your courses from your own notes and slides, finds your weak topics, including the ones you *think* you know, and keeps working on them with you until you're ready.
+A Claude skill that turns your course material into a personal study coach **and** an interactive study app. It finds your weak topics, including the ones you *think* you know, and works on them with you until exam day.
 
-**[⬇ Download ExamMind (exammind-skill.zip)](https://github.com/renzoae/exammind/raw/main/exammind-skill.zip)**
+**[⬇ Download exammind-skill.zip](https://github.com/renzoae/exammind/raw/main/exammind-skill.zip)**
 
-## What it does
+## Features
 
-- **Diagnostic quiz.** A short test on each topic shows where you stand.
-- **All your exams in one plan.** A day-by-day plan that balances every course by how close the exam is and how ready you are, with spaced review so you don't forget.
-- **Adaptive practice.** Questions get harder as you improve. When you're wrong, it explains why and gives you a similar question to try again.
-- **Confidence check.** Rate each answer: guess, fairly sure or certain. Confident wrong answers are flagged as **blind spots**, the misunderstandings that cost the most marks, and get extra attention.
-- **Mistake log.** Every mistake is recorded with *why* it happened. ExamMind spots patterns ("you keep forgetting units") and runs mistake review sessions before each exam.
-- **Mock exams with timing.** Built like your real exam, with a time budget per question and feedback on where you'd run out of time.
-- **Flashcards and teach-back.** Flashcards from your notes, and a mode where you explain a topic in your own words and get it graded.
-- **Learns from your notes.** Questions come from your own slides, notes and past papers.
-- **Saves your progress.** It keeps a progress sheet, or a progress file, so you can continue in any session.
-- **Your language.** It replies in whatever language you write in.
-
-See it in action: **[example session](examples/example-session.md)**.
+- **Study web app from your notes.** Upload your slides, notes or past papers and get a phone-friendly app with lessons, flashcards, an adaptive quiz and a mistake log.
+- **Adaptive coaching in chat.** It quizzes you one question at a time and makes questions harder as you improve. When you're wrong, it explains why and gives you a similar question to try.
+- **Blind-spot detection.** You rate your confidence on each answer. A wrong answer you were sure about gets extra attention.
+- **One plan for all your exams.** A day-by-day plan with spaced review, balanced by how close each exam is and how ready you are.
+- **Mock exams with timing,** plus mistake review, teach-back and flashcards.
+- **Saves your progress** in a spreadsheet or a file, and replies **in your language** (English and Arabic built in).
 
 ## Install
 
-1. **[Download exammind-skill.zip](https://github.com/renzoae/exammind/raw/main/exammind-skill.zip)**
-2. Add it to Claude:
-   - **Claude app (claude.ai):** upload `exammind-skill.zip` in your skill settings. You don't need to unzip it.
-   - **Claude Code:** unzip it and copy the `exammind` folder into `~/.claude/skills/`.
+1. [Download `exammind-skill.zip`](https://github.com/renzoae/exammind/raw/main/exammind-skill.zip).
+2. **Claude app:** upload the zip in your skill settings. **Claude Code:** unzip it into `~/.claude/skills/`.
 
-## Use it
-
-Start a chat and say something like:
+## Use
 
 > I have Cell Biology on 20 December and Statistics on 23 December. Help me study with ExamMind.
 
-Then upload your notes, slides or past papers when it asks.
+Upload your materials when it asks. You'll get your study app, a quick diagnostic and a plan.
 
-### Commands you can use any time
+| Say | What happens |
+|---|---|
+| `quiz me` | Practice on today's topics |
+| `study app` | Build or rebuild your study app |
+| `my mistakes` | Review open mistakes |
+| `mock exam [course]` | Timed exam with timing feedback |
+| `flashcards` · `teach back [topic]` · `explain [topic]` | Other study modes |
+| `show my progress` · `I'm behind` | Progress and plan changes |
 
-| Say this               | What happens                                       |
-|------------------------|----------------------------------------------------|
-| `quiz me`              | Practice on today's topics                         |
-| `focus on [topic]`     | Practise only that topic                           |
-| `my mistakes`          | Review your open mistakes                          |
-| `flashcards [topic]`   | Flashcards from your notes                         |
-| `teach back [topic]`   | Explain it yourself and get it graded              |
-| `mock exam [course]`   | Timed exam-style questions with timing feedback    |
-| `explain [topic]`      | Short lesson, then 2 check questions               |
-| `show my progress`     | Readiness, mastery, mistakes and plan              |
-| `add a course`         | Add another exam to your plan                      |
-| `I'm behind`           | Rebuilds the plan for the time left                |
+**Try the app:** download [`examples/cell-biology-demo.html`](examples/cell-biology-demo.html) and open it in any browser. Also see the [example chat session](examples/example-session.md).
 
-## How it works
-
-Each topic has a **mastery score from 0 to 100**. Correct answers raise it, wrong ones lower it, and confident wrong answers lower it more. Topics you haven't practised for a week slowly drop. The score decides how hard your next question is and how much time the topic gets in your plan.
+## Repo layout
 
 ```
-exammind/                        # ← the skill
-├── SKILL.md                     # Main instructions for Claude
-├── references/
-│   ├── mastery-model.md         # Scoring, confidence, blind spots, readiness
-│   ├── question-design.md       # How questions are written for each level
-│   ├── study-plan-rules.md      # Single- and multi-course planning
-│   └── study-modes.md           # Mistake review, flashcards, teach-back, mock exams
-└── templates/
-    ├── progress-sheet.md        # Progress spreadsheet layout
-    └── exammind-progress.md     # Progress file used when a sheet isn't available
-examples/example-session.md      # What a session looks like
-tests/test-prompts.md            # Prompts for checking the skill after changes
-exammind-skill.zip               # Ready-to-upload skill
+exammind/                 the skill (this is what goes in the zip)
+  SKILL.md                core workflow, which Claude always reads
+  references/             details Claude reads only when needed
+  templates/              study-app.html and the progress layout
+  scripts/build_app.py    turns course data into a study app
+examples/                 demo app, its course data, and an example session
+tests/test-prompts.md     manual checks after changing the skill
+tools/package.py          checks the skill and rebuilds the zip
 ```
 
 ## Contributing
 
-Ideas and improvements are welcome. Open an issue or a pull request. If you change the skill, run through [tests/test-prompts.md](tests/test-prompts.md) to check that it still behaves as expected.
+1. Edit the files in `exammind/`.
+2. Run `python tools/package.py`, which checks the skill and rebuilds the zip.
+3. Go through [tests/test-prompts.md](tests/test-prompts.md), then open a pull request.
+
+To change the app, edit `exammind/templates/study-app.html`, then rebuild the demo:
+`python exammind/scripts/build_app.py examples/cell-biology-demo.json examples/cell-biology-demo.html`
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT

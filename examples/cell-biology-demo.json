@@ -1,0 +1,168 @@
+{
+  "course": "Cell Biology (demo)",
+  "exam_date": "2026-12-20",
+  "language": "en",
+  "dir": "ltr",
+  "topics": [
+    {
+      "id": "membrane",
+      "title": "Membrane transport",
+      "high_yield": true,
+      "summary": "The cell membrane is a phospholipid bilayer that controls what enters and leaves the cell. Small non-polar molecules cross on their own; ions and large polar molecules need proteins. Transport is either passive (down the concentration gradient, no ATP) or active (against the gradient, uses energy).",
+      "key_points": [
+        "Simple diffusion: small non-polar molecules (O₂, CO₂) pass straight through the bilayer.",
+        "Facilitated diffusion: channel or carrier proteins help ions and polar molecules move down their gradient, with no ATP.",
+        "Osmosis: water moves from lower to higher solute concentration across a partially permeable membrane.",
+        "Active transport: pumps move substances against their gradient using ATP, e.g. the Na⁺/K⁺ pump (3 Na⁺ out, 2 K⁺ in).",
+        "Endocytosis and exocytosis move large particles in vesicles."
+      ],
+      "example": "Glucose enters red blood cells by facilitated diffusion through GLUT1 carrier proteins: down its gradient, so no ATP is needed.",
+      "source": "Lecture 3, slides 4–15",
+      "flashcards": [
+        {"front": "What is the difference between passive and active transport?", "back": "Passive goes down the gradient with no ATP; active goes against it and uses energy (ATP)."},
+        {"front": "Na⁺/K⁺ pump: what moves where?", "back": "3 Na⁺ out of the cell and 2 K⁺ in, per ATP."},
+        {"front": "Which molecules can cross the bilayer by simple diffusion?", "back": "Small, non-polar molecules such as O₂ and CO₂."}
+      ],
+      "questions": [
+        {"level": 1, "q": "Which process moves substances against their concentration gradient?",
+         "options": ["Simple diffusion", "Facilitated diffusion", "Active transport", "Osmosis"], "answer": 2,
+         "explanation": "Only active transport moves substances from low to high concentration, and it needs energy, usually ATP.",
+         "why_tempting": {"1": "Facilitated diffusion uses proteins like active transport does, but it still only moves substances down the gradient."}},
+        {"level": 1, "q": "Which of these crosses the phospholipid bilayer most easily without a protein?",
+         "options": ["Na⁺ ions", "Glucose", "O₂", "Proteins"], "answer": 2,
+         "explanation": "Small, non-polar molecules like O₂ dissolve through the hydrophobic core of the bilayer.",
+         "why_tempting": {"0": "Na⁺ is small, but it's charged, and charged particles can't pass through the hydrophobic core."}},
+        {"level": 2, "q": "A drug blocks ATP production in a cell. Which process stops first?",
+         "options": ["Diffusion of CO₂ out of the cell", "The Na⁺/K⁺ pump", "Osmosis", "Glucose entry through GLUT1"], "answer": 1,
+         "explanation": "The Na⁺/K⁺ pump is active transport and depends directly on ATP. The others are passive.",
+         "why_tempting": {"3": "GLUT1 is a protein, but it's a carrier for facilitated diffusion, which needs no ATP."}},
+        {"level": 2, "q": "A red blood cell is placed in pure water. What happens?",
+         "options": ["It shrinks as water leaves", "It swells and may burst as water enters", "Nothing, as water can't cross membranes", "Salt moves into the cell"], "answer": 1,
+         "explanation": "Pure water has a lower solute concentration than the cell, so water moves in by osmosis and the cell can burst (lysis).",
+         "why_tempting": {"0": "That happens in a concentrated (hypertonic) solution, which is the opposite situation."}},
+        {"level": 3, "q": "Inside a cell, Na⁺ is low and K⁺ is high. Which statement best explains how this is kept stable?",
+         "options": ["Na⁺ and K⁺ diffuse freely until they're balanced", "The Na⁺/K⁺ pump uses ATP to pump 3 Na⁺ out and 2 K⁺ in, against their gradients", "Osmosis carries ions with the water", "Facilitated diffusion moves Na⁺ out and K⁺ in"], "answer": 1,
+         "explanation": "Keeping ions away from equilibrium needs constant energy input. The pump does this, and the gradient it makes also powers other transport, like Na⁺–glucose co-transport.",
+         "why_tempting": {"3": "Facilitated diffusion can only move ions down their gradients, so it would undo the gradient, not keep it."}}
+      ]
+    },
+    {
+      "id": "division",
+      "title": "Mitosis vs meiosis",
+      "high_yield": true,
+      "summary": "Mitosis makes two genetically identical diploid cells for growth and repair. Meiosis makes four genetically different haploid gametes through two divisions. Meiosis I separates homologous chromosomes; meiosis II separates sister chromatids.",
+      "key_points": [
+        "Mitosis: 1 division → 2 identical diploid (2n) cells.",
+        "Meiosis: 2 divisions → 4 different haploid (n) cells.",
+        "Meiosis I separates homologous pairs, so the cells are already haploid after meiosis I.",
+        "Crossing over (prophase I) and independent assortment (metaphase I) create variation.",
+        "Count chromosomes, not chromatids, to decide haploid vs diploid."
+      ],
+      "example": "Humans: 2n = 46. After meiosis I, each cell has 23 chromosomes, each still made of 2 chromatids. After meiosis II, each gamete has 23 single chromosomes.",
+      "source": "Lecture 5, slides 2–20",
+      "flashcards": [
+        {"front": "How many cells, and what ploidy, after meiosis?", "back": "4 haploid (n) cells, genetically different."},
+        {"front": "What separates in meiosis I? In meiosis II?", "back": "Meiosis I: homologous chromosomes. Meiosis II: sister chromatids."},
+        {"front": "When does crossing over happen?", "back": "Prophase I of meiosis."}
+      ],
+      "questions": [
+        {"level": 1, "q": "How many cells does meiosis produce from one cell?",
+         "options": ["2", "4", "8", "1"], "answer": 1,
+         "explanation": "Meiosis has two divisions, so 1 → 2 → 4 cells.",
+         "why_tempting": {"0": "Two cells is the result of mitosis, or of meiosis I alone."}},
+        {"level": 1, "q": "At the end of meiosis I, are the two cells haploid or diploid?",
+         "options": ["Diploid", "Haploid", "Triploid", "It depends on the species"], "answer": 1,
+         "explanation": "Meiosis I separates homologous pairs, so each cell has one set of chromosomes (n), even though each chromosome still has two chromatids.",
+         "why_tempting": {"0": "Each chromosome still has two chromatids, so the DNA amount looks 'double', but ploidy counts chromosomes, not chromatids."}},
+        {"level": 2, "q": "A cell with 2n = 8 completes meiosis I. How many chromosomes does each new cell have?",
+         "options": ["8", "4", "16", "2"], "answer": 1,
+         "explanation": "Homologous pairs separate, so 8 → 4 chromosomes per cell (n = 4), each still with 2 chromatids.",
+         "why_tempting": {"0": "8 would be the answer after mitosis, which keeps the chromosome number the same."}},
+        {"level": 2, "q": "Which event makes the cells from meiosis genetically different from each other?",
+         "options": ["DNA replication in S phase", "Crossing over in prophase I", "Cytokinesis", "Separation of chromatids in mitosis"], "answer": 1,
+         "explanation": "Crossing over swaps sections between homologous chromosomes. Together with independent assortment, it creates new combinations of alleles.",
+         "why_tempting": {"0": "DNA replication copies DNA exactly, so it doesn't create new combinations."}},
+        {"level": 3, "q": "A student says: 'Mitosis and meiosis II are basically the same.' Which is the best evaluation?",
+         "options": ["Wrong: meiosis II separates homologous pairs", "Partly right: both separate sister chromatids, but meiosis II starts with haploid cells and the chromatids aren't identical after crossing over", "Right: they're exactly the same process", "Wrong: meiosis II doesn't separate anything"], "answer": 1,
+         "explanation": "Both separate sister chromatids, but meiosis II starts with haploid cells, and crossing over means the sister chromatids are no longer identical.",
+         "why_tempting": {"2": "The mechanics look the same, which is why it's tempting, but the starting cells and the genetic outcome differ."}}
+      ]
+    },
+    {
+      "id": "respiration",
+      "title": "Cellular respiration",
+      "high_yield": true,
+      "summary": "Cellular respiration releases energy from glucose to make ATP. Glycolysis happens in the cytoplasm; the Krebs cycle in the mitochondrial matrix; the electron transport chain on the inner mitochondrial membrane, where most ATP is made and oxygen is the final electron acceptor.",
+      "key_points": [
+        "Glycolysis: cytoplasm; glucose → 2 pyruvate; net 2 ATP; no oxygen needed.",
+        "Link reaction and Krebs cycle: mitochondrial matrix; release CO₂ and make NADH and FADH₂.",
+        "Electron transport chain: inner mitochondrial membrane; makes most of the ATP by oxidative phosphorylation.",
+        "Oxygen is the final electron acceptor and forms water.",
+        "Without oxygen, cells use fermentation to regenerate NAD⁺ (lactate in animals)."
+      ],
+      "example": "During a sprint, muscles run short of oxygen and switch to lactate fermentation. It's fast, but gives only 2 ATP per glucose.",
+      "source": "Lecture 7, slides 3–25",
+      "flashcards": [
+        {"front": "Where does glycolysis happen?", "back": "In the cytoplasm."},
+        {"front": "What is the final electron acceptor in the ETC?", "back": "Oxygen, which forms water."},
+        {"front": "Where is most ATP made?", "back": "The inner mitochondrial membrane, by the electron transport chain and ATP synthase."}
+      ],
+      "questions": [
+        {"level": 1, "q": "Where does glycolysis take place?",
+         "options": ["Mitochondrial matrix", "Cytoplasm", "Inner mitochondrial membrane", "Nucleus"], "answer": 1,
+         "explanation": "Glycolysis happens in the cytoplasm, which is why even cells without mitochondria can do it.",
+         "why_tempting": {"0": "Most of respiration happens in the mitochondria, but glycolysis comes first, outside them."}},
+        {"level": 1, "q": "What is the final electron acceptor in the electron transport chain?",
+         "options": ["NAD⁺", "Glucose", "Oxygen", "CO₂"], "answer": 2,
+         "explanation": "Oxygen accepts the electrons at the end of the chain and combines with H⁺ to form water.",
+         "why_tempting": {"0": "NAD⁺ accepts electrons earlier, in glycolysis and the Krebs cycle, not at the end of the chain."}},
+        {"level": 2, "q": "Cyanide blocks the electron transport chain. What happens to ATP production?",
+         "options": ["It increases", "It falls sharply, leaving only the small amount from glycolysis", "It is unchanged", "Only glycolysis stops"], "answer": 1,
+         "explanation": "Most ATP comes from oxidative phosphorylation. Without the ETC, only glycolysis (with fermentation) still makes a little ATP.",
+         "why_tempting": {"3": "Glycolysis doesn't depend on the ETC, so it's the part that keeps going."}},
+        {"level": 2, "q": "Why do muscle cells make lactate during intense exercise?",
+         "options": ["To make more ATP than aerobic respiration", "To regenerate NAD⁺ so glycolysis can continue without enough oxygen", "Because lactate is the final electron acceptor in the ETC", "To store glucose"], "answer": 1,
+         "explanation": "Without enough oxygen, NADH builds up. Turning pyruvate into lactate recycles NAD⁺ so glycolysis can keep making 2 ATP.",
+         "why_tempting": {"0": "Fermentation is faster, but it makes far less ATP per glucose than aerobic respiration."}},
+        {"level": 3, "q": "Which statement correctly links each stage of respiration to its location?",
+         "options": ["Glycolysis: matrix; Krebs: cytoplasm; ETC: outer membrane", "Glycolysis: cytoplasm; Krebs: matrix; ETC: inner membrane", "Glycolysis: inner membrane; Krebs: matrix; ETC: cytoplasm", "All stages happen in the matrix"], "answer": 1,
+         "explanation": "Cytoplasm → matrix → inner mitochondrial membrane. The folded inner membrane (cristae) gives a large surface area for the ETC.",
+         "why_tempting": {"0": "Mixing up 'matrix' and 'cytoplasm' is the most common error here, so link 'glycolysis' with 'outside the mitochondria'."}}
+      ]
+    },
+    {
+      "id": "organelles",
+      "title": "Organelles",
+      "high_yield": false,
+      "summary": "Eukaryotic cells contain membrane-bound organelles, each with a job. The nucleus holds DNA; ribosomes make proteins; the rough ER and Golgi process and ship proteins; mitochondria make ATP; lysosomes break down waste.",
+      "key_points": [
+        "Nucleus: stores DNA; the nucleolus makes ribosomes.",
+        "Rough ER: has ribosomes; makes and folds proteins for export.",
+        "Golgi apparatus: modifies, packages and sends proteins in vesicles.",
+        "Mitochondria: aerobic respiration and ATP.",
+        "Lysosomes: digestive enzymes that break down waste and old organelles."
+      ],
+      "example": "Pancreas cells that secrete digestive enzymes have lots of rough ER and Golgi, because they make and export so much protein.",
+      "source": "Lecture 2, slides 6–18",
+      "flashcards": [
+        {"front": "Function of the Golgi apparatus?", "back": "Modifies, packages and sends proteins in vesicles."},
+        {"front": "Rough ER vs smooth ER?", "back": "Rough ER has ribosomes and makes proteins; smooth ER makes lipids and detoxifies."},
+        {"front": "What do lysosomes contain?", "back": "Digestive (hydrolytic) enzymes."}
+      ],
+      "questions": [
+        {"level": 1, "q": "Which organelle packages proteins into vesicles for secretion?",
+         "options": ["Mitochondrion", "Golgi apparatus", "Lysosome", "Nucleolus"], "answer": 1,
+         "explanation": "The Golgi modifies and packages proteins, then sends them out in vesicles.",
+         "why_tempting": {"2": "Lysosomes are made from Golgi vesicles, but they digest material rather than package proteins for export."}},
+        {"level": 2, "q": "A cell secretes a lot of protein hormone. Which organelles would you expect it to have in large amounts?",
+         "options": ["Smooth ER and lysosomes", "Rough ER and Golgi apparatus", "Chloroplasts and vacuoles", "Centrioles and cilia"], "answer": 1,
+         "explanation": "Protein for export is made on the rough ER, then processed and shipped by the Golgi.",
+         "why_tempting": {"0": "Smooth ER makes lipids, which matters for steroid hormones, but not for protein hormones."}},
+        {"level": 3, "q": "Put the path of a secreted protein in the correct order.",
+         "options": ["Golgi → rough ER → vesicle → membrane", "Ribosome on rough ER → rough ER → vesicle → Golgi → vesicle → cell membrane", "Nucleus → lysosome → Golgi → membrane", "Mitochondrion → rough ER → Golgi"], "answer": 1,
+         "explanation": "It's made on ribosomes on the rough ER, folded in the ER, carried to the Golgi in a vesicle, modified there, then sent to the membrane in a secretory vesicle (exocytosis).",
+         "why_tempting": {"0": "Both organelles are right, but the order is reversed: the ER always comes before the Golgi."}}
+      ]
+    }
+  ]
+}

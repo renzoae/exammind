@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.2 — 2026-11-05
+
+**New**
+- **Study web app.** ExamMind turns the student's materials into a single-page app with lessons, flashcards, an adaptive quiz with confidence ratings, a mistake log, and a "Copy progress" button that hands results back to the chat. It works on phones, in light and dark mode, and right-to-left for Arabic.
+- `scripts/build_app.py` checks the course data and builds the app.
+- Demo app: `examples/cell-biology-demo.html`.
+
+**Simpler and more efficient**
+- `SKILL.md` is about half as long: the core loop stays there, and details load from `references/` only when needed.
+- The two progress templates are merged into one `templates/progress.md`.
+- `tools/package.py` checks the skill and rebuilds the zip in one command.
+- Shorter README.
+
 ## v1.1 — 2026-11-05
 
 **New**
