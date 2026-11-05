@@ -27,3 +27,5 @@ Use the format the student said the exam has:
 - When a student gets something wrong, the follow-up "similar question" should test the **same idea** with a **different example**.
 - Build questions from the student's materials first. Past paper questions are the best guide to what the real exam looks like.
 - For math or science, check your own answer before marking the student's.
+- Always show the marks for Level 3 questions (e.g. "(6 marks)"), so the student learns how much detail each one needs.
+- For a blind spot, write questions where the misunderstanding leads to a wrong answer. That way the follow-up shows whether it has really been fixed.
